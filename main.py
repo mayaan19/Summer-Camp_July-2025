@@ -6,7 +6,6 @@ import time
 
 ESP8266_LCD = "http://192.168.137.100"
 
-# https://teachablemachine.withgoogle.com/models/TzPBK8zz2/
 model = load_model('keras_model.h5', compile=False)
 with open('labels.txt', 'r') as f:
     class_names = [line.strip().split(' ', 1)[1] for line in f.readlines()]
