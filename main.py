@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model  # type: ignore
 import requests
 import time
 
-ESP8266_LCD = "http://192.168.137.100"
+ESP8266_LED = "http://http://192.168.137.182"
 
 model = load_model('keras_model.h5', compile=False)
 with open('labels.txt', 'r') as f:
@@ -39,19 +39,19 @@ while True:
         try:
             if confidence >= confidence_threshold:
                 if class_name == "Circle":
-                    requests.get(f"{ESP8266_LCD}/Circle", timeout=0.5)
+                    requests.get(f"{ESP8266_LED}/Circle", timeout=0.5)
                     print("Circle detected, LED A activated")
                 elif class_name == "Rectangle":
-                    requests.get(f"{ESP8266_LCD}/Rectangle", timeout=0.5)
+                    requests.get(f"{ESP8266_LED}/Rectangle", timeout=0.5)
                     print("Rectangle detected, LED B activated")
                 elif class_name == "Triangle":
-                    requests.get(f"{ESP8266_LCD}/Triangle", timeout=0.5)
+                    requests.get(f"{ESP8266_LED}/Triangle", timeout=0.5)
                     print("Triangle detected, LED C activated")
                 elif class_name == "Background":
-                    requests.get(f"{ESP8266_LCD}/Background", timeout=0.5)
+                    requests.get(f"{ESP8266_LED}/Background", timeout=0.5)
                     print("Background detected, LED D activated")
             else:
-                requests.get(f"{ESP8266_LCD}/Background", timeout=0.5)
+                requests.get(f"{ESP8266_LED}/Background", timeout=0.5)
                 print("Background detected, LED D activated")
             last_sent_time = current_time
         except Exception as e:
