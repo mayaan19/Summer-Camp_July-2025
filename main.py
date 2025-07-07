@@ -4,10 +4,9 @@ from tensorflow.keras.models import load_model  # type: ignore
 import requests
 import time
 
-ESP8266_LCD = "http://192.168.137.120"
-ESP8266_LED = "http://192.168.137.182"
-ESP8266_IPS = [ESP8266_LCD, ESP8266_LED]
+ESP8266_LCD = "http://192.168.137.100"
 
+# https://teachablemachine.withgoogle.com/models/TzPBK8zz2/
 model = load_model('keras_model.h5', compile=False)
 with open('labels.txt', 'r') as f:
     class_names = [line.strip().split(' ', 1)[1] for line in f.readlines()]
@@ -38,14 +37,26 @@ while True:
     cv2.imshow("Webcam View", frame)
 
     if current_time - last_sent_time > send_interval:
-        path = class_name if confidence >= confidence_threshold else "Background"
-        for ip in ESP8266_IPS:
-            try:
-                requests.get(f"{ip}/{path}", timeout=0.5)
-                print(f"Sent '{path}' to {ip}")
-            except Exception as e:
-                print(f"Error sending to {ip}:", e)
-        last_sent_time = current_time
+        try:
+            if confidence >= confidence_threshold:
+                if class_name == "Circle":
+                    requests.get(f"{ESP8266_LCD}/Circle", timeout=0.5)
+                    print("Circle detected, LED A activated")
+                elif class_name == "Rectangle":
+                    requests.get(f"{ESP8266_LCD}/Rectangle", timeout=0.5)
+                    print("Rectangle detected, LED B activated")
+                elif class_name == "Triangle":
+                    requests.get(f"{ESP8266_LCD}/Triangle", timeout=0.5)
+                    print("Triangle detected, LED C activated")
+                elif class_name == "Background":
+                    requests.get(f"{ESP8266_LCD}/Background", timeout=0.5)
+                    print("Background detected, LED D activated")
+            else:
+                requests.get(f"{ESP8266_LCD}/Background", timeout=0.5)
+                print("Background detected, LED D activated")
+            last_sent_time = current_time
+        except Exception as e:
+            print("Error sending request:", e)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
