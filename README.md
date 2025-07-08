@@ -7,3 +7,7 @@ python -m pip install --upgrade pip
 pip install opencv-python
 pip install tensorflow
 pip install requests
+```
+
+```bash
+python -m pip install opencv-python
