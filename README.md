@@ -10,4 +10,4 @@ pip install requests
 ```
 
 ```bash
-python -m pip install opencv-python
+python.exe -m pip install --upgrade pip
